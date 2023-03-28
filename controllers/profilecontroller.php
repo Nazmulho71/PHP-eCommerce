@@ -1,25 +1,25 @@
 <?php
 
-class RegisterController extends RegisterModel
+class ProfileController extends ProfileModel
 {
   private $username;
   private $email;
   private $password;
+  private $passmatch;
   public $username_err;
   public $email_err;
   public $pass_err;
 
-  public function __construct($username, $email, $password)
+  public function __construct($username, $email, $password, $passmatch)
   {
     $this->username = $username;
     $this->email = $email;
     $this->password = $password;
+    $this->passmatch = $passmatch;
   }
 
-  public function register_user()
+  public function update_profile()
   {
-    $this->register($this->username, $this->email, $this->password);
-
     if (!$this->validate_username()) {
       $this->username_err = 'Name must be 3 characters or more.';
       return;
@@ -32,8 +32,12 @@ class RegisterController extends RegisterModel
       $this->pass_err = 'Password must be 3 characters or more.';
       return;
     }
+    if (!$this->match_password()) {
+      $this->pass_err = 'Password not match.';
+      return;
+    }
 
-    header('Location: index.php');
+    $this->update($this->username, $this->email, $this->password);
   }
 
   private function validate_username()
@@ -61,6 +65,17 @@ class RegisterController extends RegisterModel
   private function validate_password()
   {
     if (strlen($this->password) < 5  || empty($this->password)) {
+      $result = false;
+    } else {
+      $result = true;
+    }
+
+    return $result;
+  }
+
+  private function match_password()
+  {
+    if ($this->password != $this->passmatch) {
       $result = false;
     } else {
       $result = true;

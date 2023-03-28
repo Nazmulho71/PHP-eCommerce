@@ -18,6 +18,7 @@ class LoginModel extends Db
     if (@password_verify($password, $result['password'])) {
       session_start();
       $_SESSION['username'] = $result['username'];
+      $_SESSION['email'] = $result['email'];
     } else {
       $this->pass_exists = false;
     }

@@ -9,6 +9,7 @@ class RegisterModel extends Db
     if ($stmt->execute([$username, $email, $hash_pass])) {
       session_start();
       $_SESSION['username'] = $username;
+      $_SESSION['email'] = $email;
     }
   }
 }
