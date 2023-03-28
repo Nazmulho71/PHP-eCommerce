@@ -8,3 +8,5 @@
 <?php endif ?>
 
 <p>Welcome, <?php echo $_SESSION['username'] ?? 'Unknown' ?></p>
+
+<a href="create_product.php">Add new product</a>
