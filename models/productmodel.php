@@ -14,6 +14,12 @@ class ProductModel extends Db
     $stmt->execute([$image, $title, $description]);
   }
 
+  public function update($image, $title, $description, $id)
+  {
+    $stmt = $this->connect()->prepare("UPDATE products SET image=?, title=?, description=? WHERE id=?");
+    $stmt->execute([$image, $title, $description, $id]);
+  }
+
   public function delete($id)
   {
     $stmt = $this->connect()->prepare("DELETE FROM products WHERE id=?");
