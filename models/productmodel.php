@@ -4,14 +4,15 @@ class ProductModel extends Db
 {
   public function view()
   {
-    $stmt = $this->connect()->query('SELECT * FROM products');
+    $stmt = $this->connect()->query('SELECT products.*, users.username FROM products
+                                    LEFT JOIN users ON products.user_id = users.id');
     return $stmt->fetchAll();
   }
 
-  public function create($image, $title, $description)
+  public function create($image, $title, $description, $user_id)
   {
-    $stmt = $this->connect()->prepare("INSERT INTO products (image, title, description) VALUES (?, ?, ?)");
-    $stmt->execute([$image, $title, $description]);
+    $stmt = $this->connect()->prepare("INSERT INTO products (image, title, description, user_id) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$image, $title, $description, $user_id]);
   }
 
   public function update($image, $title, $description, $id)

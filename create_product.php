@@ -1,11 +1,13 @@
 <?php
+session_start();
 require 'autoload.php';
 
 if (isset($_POST['submit'])) {
   $image = $_POST['image'];
   $title = $_POST['title'];
   $description = $_POST['description'];
-  $product = new ProductController($image, $title, $description);
+  $user_id = $_SESSION['id'];
+  $product = new ProductController($image, $title, $description, '', $user_id);
   $product->create_product();
 }
 

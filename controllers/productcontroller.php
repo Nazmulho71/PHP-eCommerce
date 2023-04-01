@@ -6,21 +6,23 @@ class ProductController extends ProductModel
   private $title;
   private $description;
   private $id;
+  private $user_id;
   public $image_err;
   public $title_err;
   public $description_err;
 
-  public function __construct($image, $title, $description, $id)
+  public function __construct($image, $title, $description, $id, $user_id)
   {
     $this->image = $image;
     $this->title = $title;
     $this->description = $description;
     $this->id = $id;
+    $this->user_id = $user_id;
   }
 
   public function create_product()
   {
-    $this->create($this->image, $this->title, $this->description);
+    $this->create($this->image, $this->title, $this->description, $this->user_id);
 
     if (!$this->validate_image()) {
       $this->image_err = 'Exceeded character limit.';

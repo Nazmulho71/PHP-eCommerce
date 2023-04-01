@@ -8,8 +8,14 @@ class RegisterModel extends Db
     $stmt = $this->connect()->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
     if ($stmt->execute([$username, $email, $hash_pass])) {
       session_start();
-      $_SESSION['username'] = $username;
-      $_SESSION['email'] = $email;
+
+      $stmt = $this->connect()->prepare("SELECT * FROM users WHERE email=?");
+      $stmt->execute([$email]);
+      $result = $stmt->fetch();
+
+      $_SESSION['id'] = $result['id'];
+      $_SESSION['username'] = $result['username'];
+      $_SESSION['email'] = $result['email'];
     }
   }
 }

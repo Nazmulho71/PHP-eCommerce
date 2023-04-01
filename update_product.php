@@ -1,6 +1,11 @@
 <?php
 require 'autoload.php';
 
+$id = $_GET['id'];
+if (!isset($id)) {
+  header('Location: index.php');
+}
+
 $pdo = new ProductModel;
 $products = $pdo->view();
 
@@ -13,7 +18,6 @@ if (isset($_POST['submit'])) {
   $image = $_POST['image'];
   $title = $_POST['title'];
   $description = $_POST['description'];
-  $id = $_GET['id'];
   $product = new ProductController($image, $title, $description, $id);
   $product->update_product();
 }
