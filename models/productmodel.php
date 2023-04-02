@@ -2,10 +2,17 @@
 
 class ProductModel extends Db
 {
-  public function view()
+  public function view($filter)
   {
-    $stmt = $this->connect()->query('SELECT products.*, users.username FROM products
-                                    LEFT JOIN users ON products.user_id = users.id');
+    if ($filter == 'lowtohigh') {
+      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id ORDER BY price ASC";
+    } elseif ($filter == 'hightolow') {
+      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id ORDER BY price DESC";
+    } else {
+      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id ORDER BY date ASC";
+    }
+
+    $stmt = $this->connect()->query($query);
     return $stmt->fetchAll();
   }
 
