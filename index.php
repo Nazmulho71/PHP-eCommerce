@@ -29,20 +29,19 @@ if (isset($_POST['sortby'])) {
 </form><br><br>
 
 <?php
-$pdo = new ProductModel;
+$prodmod = new ProductModel;
 
 $filter = '';
 if (isset($_POST["filter"])) {
   $filter = $_POST["filter"];
 }
-
-$products = $pdo->view($filter);
+$products = $prodmod->view($filter);
 
 foreach ($products as $product) :
 ?>
   <img src="<?php echo $product['image'] ?>" alt="Image" height="50px">
   <b><?php echo @$_SESSION['username'] == $product['username'] ? 'You' : $product['username'] ?></b>
-  <h1><?php echo $product['title'] ?></h1>
+  <h1><a href="product.php?id=<?php echo $product['id'] ?>"><?php echo $product['title'] ?></a></h1>
   <h3>$ <?php echo $product['price'] ?></h3>
   <p><?php echo $product['description'] ?></p>
 
