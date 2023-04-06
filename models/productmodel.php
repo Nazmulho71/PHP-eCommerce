@@ -18,7 +18,7 @@ class ProductModel extends Db
 
   public function view_single($id)
   {
-    $stmt = $this->connect()->prepare("SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.id=?");
+    $stmt = $this->connect()->prepare("SELECT * FROM products WHERE products.id=?");
     $stmt->execute([$id]);
     return $stmt->fetch();
   }

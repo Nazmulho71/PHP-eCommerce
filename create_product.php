@@ -13,7 +13,7 @@ if (isset($_POST['submit'])) {
 
 ?>
 
-<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+<form action="" method="post">
   <label for="">Image url</label>
   <input type="text" name="image" value="<?php echo $image ?? '' ?>">
   <p><?php echo $product->image_err ?? '' ?></p>

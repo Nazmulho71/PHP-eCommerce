@@ -17,7 +17,7 @@ if (isset($_POST['submit'])) {
 
 ?>
 
-<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+<form action="" method="post">
   <label for="">Name</label>
   <input type="text" name="username" value="<?php echo $username ?? $_SESSION['username'] ?>">
   <p><?php echo $profile->username_err ?? '' ?></p>
