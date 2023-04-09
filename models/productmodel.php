@@ -23,6 +23,13 @@ class ProductModel extends Db
     return $stmt->fetch();
   }
 
+  public function search($search)
+  {
+    $stmt = $this->connect()->prepare("SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.title LIKE ?");
+    $stmt->execute(["%$search%"]);
+    return $stmt->fetchAll();
+  }
+
   public function create($image, $title, $description, $user_id)
   {
     $stmt = $this->connect()->prepare("INSERT INTO products (image, title, description, user_id) VALUES (?, ?, ?, ?)");

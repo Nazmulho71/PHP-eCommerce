@@ -1,10 +1,6 @@
 <?php
 session_start();
 require 'autoload.php';
-
-if (isset($_POST['sortby'])) {
-  echo $sortby = $_POST['sortby'];
-}
 ?>
 
 <?php if (!isset($_SESSION['username'])) : ?>
@@ -18,7 +14,12 @@ if (isset($_POST['sortby'])) {
 
 <a href="create_product.php">Add new product</a><br><br>
 
-<form method="POST" action="">
+<form action="" method="GET">
+  <input type="text" name="search" placeholder="Search products..." value="<?php echo $_GET['search'] ?? '' ?>">
+  <button type="submit">Search</button>
+</form><br><br>
+
+<form action="" method="POST">
   Sort by:
   <select name="filter" onchange="this.form.submit()">
     <option value="" default selected disabled>Select</option>
@@ -35,20 +36,30 @@ $filter = '';
 if (isset($_POST["filter"])) {
   $filter = $_POST["filter"];
 }
-$products = $prodmod->view($filter);
 
-foreach ($products as $product) :
-?>
-  <img src="<?php echo $product['image'] ?>" alt="Image" height="50px">
-  <b><?php echo @$_SESSION['username'] == $product['username'] ? 'You' : $product['username'] ?></b>
-  <h1><a href="product.php?id=<?php echo $product['id'] ?>"><?php echo $product['title'] ?></a></h1>
-  <h3>$ <?php echo $product['price'] ?></h3>
-  <p><?php echo $product['description'] ?></p>
+if (isset($_GET['search'])) {
+  $products = $prodmod->search($_GET['search']);
+} else {
+  $products = $prodmod->view($filter);
+}
 
-  <?php if (@$_SESSION['username'] == $product['username']) : ?>
-    <button><a href="update_product.php?id=<?php echo $product['id'] ?>">Update</a></button>
-    <button><a href="includes/delete_product.php?id=<?php echo $product['id'] ?>">Delete</a></button>
-  <?php endif ?>
-  <br>
-  <br>
-<?php endforeach ?>
+if (empty($products)) : ?>
+  <p>No products found.</p>
+  <?php
+else :
+  foreach ($products as $product) :
+  ?>
+    <img src="<?php echo $product['image'] ?>" alt="Image" height="50px">
+    <b><?php echo @$_SESSION['username'] == $product['username'] ? 'You' : $product['username'] ?></b>
+    <h1><a href="product.php?id=<?php echo $product['id'] ?>"><?php echo $product['title'] ?></a></h1>
+    <h3>$ <?php echo $product['price'] ?></h3>
+    <p><?php echo $product['description'] ?></p>
+
+    <?php if (@$_SESSION['username'] == $product['username']) : ?>
+      <button><a href="update_product.php?id=<?php echo $product['id'] ?>">Update</a></button>
+      <button><a href="includes/delete_product.php?id=<?php echo $product['id'] ?>">Delete</a></button>
+    <?php endif ?>
+    <br>
+    <br>
+<?php endforeach;
+endif ?>
