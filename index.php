@@ -17,7 +17,7 @@ require 'autoload.php';
 <form action="" method="GET">
   <input type="text" name="search" placeholder="Search products..." value="<?php echo $_GET['search'] ?? '' ?>">
   <button type="submit">Search</button>
-</form><br><br>
+</form>
 
 <form action="" method="POST">
   Sort by:
@@ -33,15 +33,15 @@ require 'autoload.php';
 $prodmod = new ProductModel;
 
 $filter = '';
+$search = '';
+if (isset($_GET['search'])) {
+  $search = $_GET['search'];
+}
 if (isset($_POST["filter"])) {
   $filter = $_POST["filter"];
 }
 
-if (isset($_GET['search'])) {
-  $products = $prodmod->search($_GET['search']);
-} else {
-  $products = $prodmod->view($filter);
-}
+$products = $prodmod->view($filter, $search);
 
 if (empty($products)) : ?>
   <p>No products found.</p>

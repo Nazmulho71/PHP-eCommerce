@@ -2,17 +2,20 @@
 
 class ProductModel extends Db
 {
-  public function view($filter)
+  public function view($filter, $search)
   {
-    if ($filter == 'lowtohigh') {
-      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id ORDER BY price ASC";
+    if ($filter == 'newest') {
+      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.title LIKE ? ORDER BY date ASC";
+    } elseif ($filter == 'lowtohigh') {
+      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.title LIKE ? ORDER BY price ASC";
     } elseif ($filter == 'hightolow') {
-      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id ORDER BY price DESC";
+      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.title LIKE ? ORDER BY price DESC";
     } else {
-      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id ORDER BY date ASC";
+      $query = "SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.title LIKE ?";
     }
 
-    $stmt = $this->connect()->query($query);
+    $stmt = $this->connect()->prepare($query);
+    $stmt->execute(["%$search%"]);
     return $stmt->fetchAll();
   }
 
@@ -21,13 +24,6 @@ class ProductModel extends Db
     $stmt = $this->connect()->prepare("SELECT * FROM products WHERE products.id=?");
     $stmt->execute([$id]);
     return $stmt->fetch();
-  }
-
-  public function search($search)
-  {
-    $stmt = $this->connect()->prepare("SELECT products.*, users.username FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.title LIKE ?");
-    $stmt->execute(["%$search%"]);
-    return $stmt->fetchAll();
   }
 
   public function create($image, $title, $description, $user_id)
