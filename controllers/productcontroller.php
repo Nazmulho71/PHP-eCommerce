@@ -4,17 +4,19 @@ class ProductController extends ProductModel
 {
   private $image;
   private $title;
+  private $price;
   private $description;
   private $id;
   private $user_id;
-  public $image_err;
   public $title_err;
+  public $price_err;
   public $description_err;
 
-  public function __construct($image, $title, $description, $id, $user_id)
+  public function __construct($image, $title, $price, $description, $id, $user_id)
   {
     $this->image = $image;
     $this->title = $title;
+    $this->price = $price;
     $this->description = $description;
     $this->id = $id;
     $this->user_id = $user_id;
@@ -22,14 +24,12 @@ class ProductController extends ProductModel
 
   public function create_product()
   {
-    $this->create($this->image, $this->title, $this->description, $this->user_id);
-
-    if (!$this->validate_image()) {
-      $this->image_err = 'Exceeded character limit.';
-      return;
-    }
     if (!$this->validate_title()) {
       $this->title_err = 'Title must be less than 40 characters.';
+      return;
+    }
+    if (!$this->validate_price()) {
+      $this->price_err = 'Free pizza not allowed!';
       return;
     }
     if (!$this->validate_description()) {
@@ -37,19 +37,18 @@ class ProductController extends ProductModel
       return;
     }
 
+    $this->create($this->image, $this->title, $this->description, $this->price, $this->user_id);
     header('Location: index.php');
   }
 
   public function update_product()
   {
-    $this->update($this->image, $this->title, $this->description, $this->id);
-
-    if (!$this->validate_image()) {
-      $this->image_err = 'Exceeded character limit.';
-      return;
-    }
     if (!$this->validate_title()) {
       $this->title_err = 'Title must be less than 40 characters.';
+      return;
+    }
+    if (!$this->validate_price()) {
+      $this->price_err = 'Free pizza not allowed!';
       return;
     }
     if (!$this->validate_description()) {
@@ -57,12 +56,13 @@ class ProductController extends ProductModel
       return;
     }
 
-    header('Location: index.php');
+    $this->update($this->image, $this->title, $this->description, $this->price, $this->id);
+    header("Location: product.php?id=$this->id");
   }
 
-  private function validate_image()
+  private function validate_title()
   {
-    if (strlen($this->image) > 1000) {
+    if (strlen($this->title) > 40 || empty($this->title)) {
       $result = false;
     } else {
       $result = true;
@@ -71,9 +71,9 @@ class ProductController extends ProductModel
     return $result;
   }
 
-  private function validate_title()
+  private function validate_price()
   {
-    if (strlen($this->title) > 40 || empty($this->title)) {
+    if ($this->price == 0 || empty($this->price)) {
       $result = false;
     } else {
       $result = true;

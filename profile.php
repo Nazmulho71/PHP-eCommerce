@@ -1,10 +1,9 @@
 <?php
-session_start();
+include 'includes/header.php';
+
 if (!isset($_SESSION['username'])) {
   header('Location: login.php');
 }
-
-require 'autoload.php';
 
 if (isset($_POST['submit'])) {
   $username = $_POST['username'];
@@ -14,24 +13,37 @@ if (isset($_POST['submit'])) {
   $profile = new ProfileController($username, $email, $password, $passmatch);
   $profile->update_profile();
 }
-
 ?>
 
-<form action="" method="post">
-  <label for="">Name</label>
-  <input type="text" name="username" value="<?php echo $username ?? $_SESSION['username'] ?>">
-  <p><?php echo $profile->username_err ?? '' ?></p>
+<div class="p-5">
+  <h1 class="mb-4">Update your <span class="text-danger bg-gradient">Profile</span></h1>
 
-  <label for="">Email</label>
-  <input type="email" name="email" value="<?php echo $email ?? $_SESSION['email'] ?>">
-  <p><?php echo $profile->email_err ?? '' ?></p>
+  <form action="" method="post">
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input type="text" class="form-control <?php echo @$profile->username_err ? 'is-invalid' : '' ?>" name="username" value="<?php echo $username ?? $_SESSION['username'] ?>" aria-describedby="username">
+      <div class="invalid-feedback"><?php echo $profile->username_err ?? '' ?></div>
+    </div>
 
-  <label for="">Password</label>
-  <input type="password" name="password"><br><br>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-control <?php echo @$profile->email_err ? 'is-invalid' : '' ?>" name="email" value="<?php echo $email ?? $_SESSION['email'] ?>" aria-describedby="email">
+      <div class="invalid-feedback"><?php echo $profile->email_err ?? '' ?></div>
+    </div>
 
-  <label for="">Re-enter Password</label>
-  <input type="password" name="passmatch">
-  <p><?php echo $profile->pass_err ?? '' ?></p>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-control <?php echo @$profile->pass_err ? 'is-invalid' : '' ?>" name="password" aria-describedby="password">
+    </div>
 
-  <button type="submit" name="submit">Update</button>
-</form>
+    <div class="mb-3">
+      <label class="form-label">Re-Enter Password</label>
+      <input type="password" class="form-control <?php echo @$profile->pass_err ? 'is-invalid' : '' ?>" name="passmatch" aria-describedby="passmatch">
+      <div class="invalid-feedback"><?php echo $profile->pass_err ?? '' ?></div>
+    </div>
+
+    <button type="submit" class="btn btn-danger bg-gradient" name="submit">Update</button>
+  </form>
+</div>
+
+<?php include 'includes/footer.php' ?>

@@ -12,12 +12,5 @@ function autoload_controllers($className)
     require __DIR__ . "/controllers/$className.php";
 }
 
-function autoload_views($className)
-{
-  if (file_exists(__DIR__ . "/views/$className.php"))
-    require __DIR__ . "/views/$className.php";
-}
-
 spl_autoload_register("autoload_models");
 spl_autoload_register("autoload_controllers");
-spl_autoload_register("autoload_views");

@@ -21,21 +21,21 @@ class ProductModel extends Db
 
   public function view_single($id)
   {
-    $stmt = $this->connect()->prepare("SELECT * FROM products WHERE products.id=?");
+    $stmt = $this->connect()->prepare("SELECT * FROM products LEFT JOIN users ON products.user_id = users.id WHERE products.id=?");
     $stmt->execute([$id]);
     return $stmt->fetch();
   }
 
-  public function create($image, $title, $description, $user_id)
+  public function create($image, $title, $description, $price,  $user_id)
   {
-    $stmt = $this->connect()->prepare("INSERT INTO products (image, title, description, user_id) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$image, $title, $description, $user_id]);
+    $stmt = $this->connect()->prepare("INSERT INTO products (image, title, description, price, user_id) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$image, $title, $description, $price,  $user_id]);
   }
 
-  public function update($image, $title, $description, $id)
+  public function update($image, $title, $description, $price,  $id)
   {
-    $stmt = $this->connect()->prepare("UPDATE products SET image=?, title=?, description=? WHERE id=?");
-    $stmt->execute([$image, $title, $description, $id]);
+    $stmt = $this->connect()->prepare("UPDATE products SET image=?, title=?, description=?, price=? WHERE id=?");
+    $stmt->execute([$image, $title, $description, $price, $id]);
   }
 
   public function delete($id)
